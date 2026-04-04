@@ -8,14 +8,14 @@ import { CreateToolDef, UpdateToolDef } from "../models/toolModel"
 export const getTools = async (req: Request, res: Response) => {
     try {
         const items = await getAllTools();
-        res.status(HTTP_STATUS.OK).json({ Listing: "Loan Applications", Count: items.length, data: items });
+        res.status(HTTP_STATUS.OK).json({ Listing: "Tool Definitions", Count: items.length, data: items });
     }
     catch (error) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
             success: false,
             error: {
-                message: `Could not find loan with id ${req.params.id}`,
-                code: "LOAN_NOT_FOUND"
+                message: `Could not find tool with id ${req.params.id}`,
+                code: "TOOL_NOT_FOUND"
             },
             timestamp: new Date().toISOString()
         });
@@ -105,8 +105,8 @@ export const deleteToolByName = async (req: Request, res: Response): Promise<voi
         res.status(HTTP_STATUS.BAD_REQUEST).json({
             success: false,
             error: {
-                message: `Could not find loan with id ${req.params.id}`,
-                code: "LOAN_NOT_FOUND"
+                message: `Could not find tool with id ${req.params.id}`,
+                code: "TOOL_NOT_FOUND"
             },
             timestamp: new Date().toISOString()
         });

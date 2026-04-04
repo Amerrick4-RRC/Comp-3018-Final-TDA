@@ -1,4 +1,4 @@
 export interface AuthorizationOptions {
-    hasRole: Array<"admin" | "officer" | "manager">;
+    hasRole: Array<"admin" | "creator">;
     allowSameUser?: boolean;
 }

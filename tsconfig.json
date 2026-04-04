@@ -16,6 +16,7 @@
         "noImplicitThis": true,
         "noUnusedLocals": true,
         "alwaysStrict": true,
+        "ignoreDeprecations": "6.0",
         "baseUrl": "./",
         "paths": {
             "*": ["*"]

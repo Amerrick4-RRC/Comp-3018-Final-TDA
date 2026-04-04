@@ -6,7 +6,7 @@ import { setCustomClaims, updateToolWithName, deleteToolByName } from "../contro
 
 const router: Router = express.Router();
 
-router.post("/setCustomClaims",authenticate, isAuthorized({ hasRole: ["admin"] }), setCustomClaims);
+router.post("/setCustomClaims", setCustomClaims);
 router.put("/tools/:name", authenticate, isAuthorized({ hasRole: ["admin"] }), updateToolWithName);
 router.delete("/tools/:name", authenticate, isAuthorized({ hasRole: ["admin"] }), deleteToolByName);
 export default router;
