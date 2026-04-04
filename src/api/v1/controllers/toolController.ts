@@ -22,6 +22,7 @@ export const getTools = async (req: Request, res: Response) => {
     }
 };
 
+
 export const getSelectedTool = async (req: Request, res: Response) => {
     try {
         let name = req.params.name as string;
@@ -40,6 +41,7 @@ export const getSelectedTool = async (req: Request, res: Response) => {
         });
     }
 };
+
 
 export const createTool = async (req: Request, res: Response) => {
 
@@ -66,6 +68,7 @@ export const createTool = async (req: Request, res: Response) => {
     }
 };
 
+
 export const updateToolWithName = async (req: Request, res: Response): Promise<void> => {
     const name = req.params.name as string;
     const uid = res.locals.uid as string;
@@ -86,6 +89,7 @@ export const updateToolWithName = async (req: Request, res: Response): Promise<v
         res.status(HTTP_STATUS.NOT_FOUND).json({ message: `Could not find ${name}` })
     }
 };
+
 
 export const deleteToolByName = async (req: Request, res: Response): Promise<void> => {
     const name = req.params.name as string;
@@ -113,6 +117,7 @@ export const deleteToolByName = async (req: Request, res: Response): Promise<voi
     }
 };
 
+
 export const getHealth = (req: Request, res: Response): void => {
     const healthData: HealthCheckResponse = {
         status: "OK",
@@ -122,6 +127,7 @@ export const getHealth = (req: Request, res: Response): void => {
     };
     res.status(HTTP_STATUS.OK).json(healthData)
 };
+
 
 export const signIn = async (req: Request, res: Response) => {
     const email = req.body.email;

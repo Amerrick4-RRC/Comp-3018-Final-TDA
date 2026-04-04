@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
+import setupSwagger from "./config/swagger";
 import {
     accessLogger,
     errorLogger,
@@ -35,5 +36,8 @@ app.use("/api/admin", adminRoutes)
 
 // Global error handling middleware (MUST be applied last)
 app.use(errorHandler);
+
+// Setup Swagger documentation
+setupSwagger(app);
 
 export default app;
