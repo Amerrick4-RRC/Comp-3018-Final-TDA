@@ -4,6 +4,7 @@ import { CreateToolDef, ToolDef, UpdateToolDef } from "../models/toolModel"
 // In-memory cache for tool definitions
 const toolMap = new Map()
 
+// Cache expiration time set to one hour (in milliseconds)
 const CACHE_TIMER = 60 * 60 * 1000; // Cache expiration time set to one hour (in milliseconds)
 
 // Function to set a tool definition in the cache with an expiration timer
@@ -22,6 +23,26 @@ const getCache = (Key: string): ToolDef | null => {
     return value.value;
 };
 
+// Cache for all tools list with expiration
+let ALL_TOOLS_CACHE: {
+value: ToolDef[],
+expires: number 
+} | null = null;
+
+const setAllToolsCache = (value: ToolDef[], timer: number) => {
+    ALL_TOOLS_CACHE = { value, expires: Date.now() + CACHE_TIMER };
+}
+
+const getAllToolsCache = (): ToolDef[] | null => {
+    if (!ALL_TOOLS_CACHE) return null;
+    if (Date.now() > ALL_TOOLS_CACHE.expires) {
+        ALL_TOOLS_CACHE = null;
+        return null;
+    }
+    return ALL_TOOLS_CACHE.value;
+};
+
+
 // Creates a new tool definition in the database
 export const createNewTool = async (tool: CreateToolDef): Promise<ToolDef> => {
     let results = await addTool(tool);
@@ -33,6 +54,7 @@ export const createNewTool = async (tool: CreateToolDef): Promise<ToolDef> => {
 export const getByToolName = async (name: string): Promise<ToolDef> => {
     const cachedTool = getCache(name);
     if (cachedTool) {
+        console.log(`Cache hit for tool: ${name}`);
         return cachedTool;
     };
     let results = await getToolById(name);
@@ -41,8 +63,15 @@ export const getByToolName = async (name: string): Promise<ToolDef> => {
 };
 
 // Retrieves a list of all tool definitions in the database
-export const getAllTools = async (): Promise<ToolDef[]> => {  
+export const getAllTools = async (): Promise<ToolDef[]> => { 
+    const cachedTools = getAllToolsCache();
+    if (cachedTools) {
+        console.log("Cache hit for all tools");
+        return cachedTools;
+    };
     let results = await getAllToolsList();
+    results.forEach((tool) => setCache(tool.name, tool, CACHE_TIMER));
+    setAllToolsCache(results, CACHE_TIMER);
     return results;
 };
 
@@ -59,3 +88,9 @@ export const deleteToolWithName = async (name: string): Promise<void> => {
     toolMap.delete(name);
     return;
 }
+
+// Resets the in-memory cache (for testing purposes)
+export const __resetCache = () => {
+    toolMap.clear();
+    ALL_TOOLS_CACHE = null;
+};
