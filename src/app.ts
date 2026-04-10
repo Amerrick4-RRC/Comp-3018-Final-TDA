@@ -12,12 +12,13 @@ import projectRoutes from "./api/v1/routes/toolsRoutes";
 import adminRoutes from "./api/v1/routes/adminRoutes";
 import morgan from "morgan";
 
-
+// Initialize Express app
 const app = express();
 
+// Logging middleware (should be applied early in the middleware stack)
 app.use(morgan("dev")); // or "combined" in production
 
-// Logging middleware (should be applied early in the middleware stack)
+// Conditional logging based on environment
 if (process.env.NODE_ENV === "production") {
     // In production, log to files
     app.use(accessLogger);
@@ -40,4 +41,5 @@ app.use(errorHandler);
 // Setup Swagger documentation
 setupSwagger(app);
 
+// Start the server
 export default app;
