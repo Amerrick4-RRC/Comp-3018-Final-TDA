@@ -11,9 +11,12 @@ import errorHandler from "./api/v1/middleware/errorHandler";
 import projectRoutes from "./api/v1/routes/toolsRoutes";
 import adminRoutes from "./api/v1/routes/adminRoutes";
 import morgan from "morgan";
+import { apiHelmetConfig } from "./config/helmetConfig";
 
 // Initialize Express app
 const app = express();
+
+app.use(apiHelmetConfig); 
 
 // Logging middleware (should be applied early in the middleware stack)
 app.use(morgan("dev")); // or "combined" in production
