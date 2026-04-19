@@ -3,6 +3,7 @@ import { DocumentReference } from "firebase-admin/firestore";
 import * as model from "../models/toolModel"
 import { AppError } from "../errors/errors";
 
+// Adds a new tool to the Firestore database. The tool's name is used as the document ID.
 export const addTool = async (tool: model.CreateToolDef): Promise<model.ToolDef> => {
 
     const docRef: DocumentReference = db.collection("tools").doc(tool.name);
@@ -22,6 +23,7 @@ export const addTool = async (tool: model.CreateToolDef): Promise<model.ToolDef>
     return addition;
 };
 
+// Retrieves a tool from the Firestore database by its name (document ID). If the tool does not exist, an error is thrown.
 export const getToolById = async (name: string): Promise<model.ToolDef> => {
     const docRef: DocumentReference = db.collection("tools").doc(name);
 
@@ -37,6 +39,7 @@ export const getToolById = async (name: string): Promise<model.ToolDef> => {
     };
 };
 
+// Retrieves a list of all tools from the Firestore database. Each tool is returned as an object containing its data and name (document ID).
 export const getAllToolsList = async (): Promise<model.ToolDef[]> => {
     try {
         const snapshot = await db.collection("tools").get()
@@ -49,6 +52,7 @@ export const getAllToolsList = async (): Promise<model.ToolDef[]> => {
     };
 };
 
+// Updates an existing tool in the Firestore database by its name (document ID). The update is performed using a partial object containing the fields to be updated. If the tool does not exist, an error is thrown.
 export const updateTool = async (name: string, update: Partial<model.UpdateToolDef>): Promise<model.ToolDef> => {
     const docRef: DocumentReference = db.collection("tools").doc(name);
 
@@ -76,6 +80,7 @@ export const updateTool = async (name: string, update: Partial<model.UpdateToolD
 
 };
 
+// Deletes a tool from the Firestore database by its name (document ID). If the tool does not exist, an error is thrown.
 export const deleteToolByName = async (name: string): Promise<void> => {
     const docRef: DocumentReference = db.collection("tools").doc(name);
     const snapshot = await docRef.get();

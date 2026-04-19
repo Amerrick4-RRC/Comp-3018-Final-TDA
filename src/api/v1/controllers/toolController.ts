@@ -4,7 +4,7 @@ import { HTTP_STATUS } from "../../../constants/httpConstants";
 import { createNewTool, getByToolName, getAllTools, deleteToolWithName, updateToolByName, } from "../services/toolsServices"
 import { CreateToolDef, UpdateToolDef } from "../models/toolModel"
 
-
+// Controller for handling tool-related API requests, including CRUD operations and health checks
 export const getTools = async (req: Request, res: Response) => {
     try {
         const items = await getAllTools();
@@ -22,7 +22,7 @@ export const getTools = async (req: Request, res: Response) => {
     }
 };
 
-
+// Controller for handling retrieval of a specific tool definition by name
 export const getSelectedTool = async (req: Request, res: Response) => {
     try {
         let name = req.params.name as string;
@@ -42,7 +42,7 @@ export const getSelectedTool = async (req: Request, res: Response) => {
     }
 };
 
-
+// Controller for handling creation of a new tool definition
 export const createTool = async (req: Request, res: Response) => {
 
     try {
@@ -68,7 +68,7 @@ export const createTool = async (req: Request, res: Response) => {
     }
 };
 
-
+// Controller for handling updates to an existing tool definition by name, with ownership check
 export const updateToolWithName = async (req: Request, res: Response): Promise<void> => {
     const name = req.params.name as string;
     const uid = res.locals.uid as string;
@@ -90,7 +90,7 @@ export const updateToolWithName = async (req: Request, res: Response): Promise<v
     }
 };
 
-
+// Controller for handling deletion of a tool definition by name, with ownership check
 export const deleteToolByName = async (req: Request, res: Response): Promise<void> => {
     const name = req.params.name as string;
     const uid = res.locals.uid as string;
@@ -117,7 +117,7 @@ export const deleteToolByName = async (req: Request, res: Response): Promise<voi
     }
 };
 
-
+// Controller for handling health check endpoint, returning service status and metadata
 export const getHealth = (req: Request, res: Response): void => {
     const healthData: HealthCheckResponse = {
         status: "OK",
@@ -128,7 +128,7 @@ export const getHealth = (req: Request, res: Response): void => {
     res.status(HTTP_STATUS.OK).json(healthData)
 };
 
-
+// Controller for handling user sign-in, authenticating with Firebase and returning tokens and user info
 export const signIn = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;

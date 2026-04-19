@@ -11,13 +11,17 @@ import errorHandler from "./api/v1/middleware/errorHandler";
 import projectRoutes from "./api/v1/routes/toolsRoutes";
 import adminRoutes from "./api/v1/routes/adminRoutes";
 import morgan from "morgan";
+import { apiHelmetConfig } from "./config/helmetConfig";
 
-
+// Initialize Express app
 const app = express();
 
-app.use(morgan("dev")); // or "combined" in production
+app.use(apiHelmetConfig); 
 
 // Logging middleware (should be applied early in the middleware stack)
+app.use(morgan("dev")); // or "combined" in production
+
+// Conditional logging based on environment
 if (process.env.NODE_ENV === "production") {
     // In production, log to files
     app.use(accessLogger);
@@ -40,4 +44,5 @@ app.use(errorHandler);
 // Setup Swagger documentation
 setupSwagger(app);
 
+// Start the server
 export default app;

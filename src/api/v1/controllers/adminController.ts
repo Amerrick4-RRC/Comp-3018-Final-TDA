@@ -38,6 +38,7 @@ export const setCustomClaims = async (
     }
 };
 
+// Controller for handling retrieval of all tool definitions, with error handling
 export const updateToolWithName = async (req: Request, res: Response): Promise<void> => {
     const name = req.params.name as string;
    
@@ -52,6 +53,7 @@ export const updateToolWithName = async (req: Request, res: Response): Promise<v
     }
 };
 
+// Controller for handling deletion of a tool definition by name, with error handling
 export const deleteToolByName = async (req: Request, res: Response): Promise<void> => {
     const name = req.params.name as string;
     
