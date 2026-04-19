@@ -1,0 +1,5 @@
+node_modules/
+dist/
+apik.ts
+eslint.config.js/
+.env
