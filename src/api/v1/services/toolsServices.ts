@@ -79,6 +79,9 @@ export const getAllTools = async (): Promise<ToolDef[]> => {
 export const updateToolByName = async (name: string, update: Partial<UpdateToolDef>): Promise<ToolDef> => {
     let results = await updateTool(name, update);
     setCache(results.name, results, CACHE_TIMER);
+    if (ALL_TOOLS_CACHE) {
+        ALL_TOOLS_CACHE.expires = Date.now(); // Invalidate the all tools cache
+    }
     return results;
 };
 
@@ -86,6 +89,9 @@ export const updateToolByName = async (name: string, update: Partial<UpdateToolD
 export const deleteToolWithName = async (name: string): Promise<void> => {
     await deleteToolByName(name);
     toolMap.delete(name);
+    if (ALL_TOOLS_CACHE) {
+        ALL_TOOLS_CACHE.expires = Date.now(); // Invalidate the all tools cache
+    }
     return;
 }
 

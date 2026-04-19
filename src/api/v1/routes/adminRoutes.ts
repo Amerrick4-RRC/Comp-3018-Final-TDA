@@ -2,9 +2,12 @@ import express, { Router } from "express";
 import authenticate from "../middleware/authenticate";
 import isAuthorized from "../middleware/authorize";
 import { setCustomClaims, updateToolWithName, deleteToolByName } from "../controllers/adminController";
-
+import cors from "cors";
+import { authenticatedCorsOptions} from "../../../config/corsConfig";
 
 const router: Router = express.Router();
+
+router.use("/tools", cors(authenticatedCorsOptions));
 
 /**
  * @openapi

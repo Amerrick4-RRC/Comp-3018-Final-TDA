@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/morgan": "^1.9.10",
@@ -80,6 +81,7 @@
     "cookie": "^0.7.2",
     "cookie-signature": "^1.2.2",
     "cookiejar": "^2.1.4",
+    "cors": "^2.8.6",
     "create-require": "^1.1.1",
     "cross-spawn": "^7.0.6",
     "debug": "^4.4.3",
@@ -139,6 +141,7 @@
     "has-symbols": "^1.1.0",
     "has-tostringtag": "^1.0.2",
     "hasown": "^2.0.2",
+    "helmet": "^8.1.0",
     "html-escaper": "^2.0.2",
     "http-errors": "^2.0.1",
     "human-signals": "^2.1.0",
