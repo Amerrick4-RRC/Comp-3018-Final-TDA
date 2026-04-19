@@ -1,103 +1,149 @@
 # AI Tool Registration Service
 
-A robust REST API service built with Node.js and TypeScript for registering and managing AI tools. This service provides endpoints for tool registration, administration, and health checks, with comprehensive documentation via Swagger.
+This is a CRUD API for managing AI tools, built with Node.js, Express, and Firebase. It provides endpoints for creating, retrieving, updating, and deleting tool definitions, with authentication and authorization.
 
 ## Features
+- Create, read, update, and delete AI tool definitions
+- Admin endpoints for system management
+- Authentication & authorization with role-based access (admin, creator)
+- CORS configuration for public and authenticated endpoints
+- Helmet configuration for enhanced security
+- Comprehensive API documentation with Swagger
+- Joi validation for request data
 
-- **Tool Registration**: Register and manage AI tools with detailed metadata
-- **Admin Panel**: Administrative endpoints for managing tools and system health
-- **Authentication & Authorization**: Secure middleware for user authentication and role-based access
-- **Validation**: Input validation using schemas for data integrity
-- **Error Handling**: Centralized error handling with custom error utilities
-- **Logging**: Request logging middleware for monitoring and debugging
-- **API Documentation**: Interactive Swagger UI for exploring and testing endpoints
-- **Testing**: Comprehensive test suite with Jest for unit and integration tests
-- **TypeScript**: Full TypeScript support for type safety and better development experience
+## Project Overview
+The AI Tool Registration Service is designed to allow users to register and manage AI tools through a set of RESTful endpoints. It solves the problem of tool organization and management by providing a centralized API for creating and managing tool definitions with JSON schemas.
+The project was created to demonstrate the implementation of a secure and well-documented API using modern web development practices.
 
-## Technologies Used
+## Installation Instructions
+### Prerequisites
+- Node.js (version 14 or higher)
+- NPM (Node Package Manager)
+- TypeScript (installed)
+- Firebase database with admin SDK credentials
+- .env file storing your Firebase credentials
+    -- `FIREBASE_PROJECT_ID`
+    -- `FIREBASE_CLIENT_EMAIL`
+    -- `FIREBASE_PRIVATE_KEY`
+    -- `ALLOWED_ORIGINS` (comma-separated list of allowed origins for authenticated endpoints)
 
-- **Runtime**: Node.js
-- **Language**: TypeScript
-- **Framework**: Express.js
-- **Database**: Firebase (configuration)
-- **Documentation**: Swagger/OpenAPI
-- **Testing**: Jest, Supertest
-- **Linting**: ESLint
-- **Build Tool**: TypeScript Compiler
+        {
+        NODE_ENV=development
+            PORT=3000
+            FIREBASE_PROJECT_ID=your-project-id
+            FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_KEY\n-----END PRIVATE KEY-----\n"
+            FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@your-project.iam.gserviceaccount.com
+            SWAGGER_SERVER_URL=http://localhost:3000/api/v1
+            ALLOWED_ORIGINS=http://localhost:3000,http://example.com
+            FIREBASE_WEB_API_KEY="your-web-api-key"
+        }
 
-## Project Structure
+## Setup Instructions
+1. Clone the repository
+    -- git clone <repository-url>
+2. Install dependencies
+    -- npm install
+3. Place .env file in the root directory with the required environment variables
+4. Start the server
+    -- npm start
 
-```
-src/
-├── api/
-│   └── v1/
-│       ├── controllers/     # Request handlers
-│       ├── errors/          # Custom error definitions
-│       ├── middleware/      # Authentication, authorization, logging, etc.
-│       ├── models/          # Data models and response structures
-│       ├── repositories/    # Data access layer
-│       ├── routes/          # API route definitions
-│       ├── services/        # Business logic
-│       ├── utils/           # Utility functions
-│       └── validation/      # Input validation schemas
-├── config/                  # Configuration files (Firebase, Swagger)
-└── constants/               # HTTP constants and other constants
-tests/                       # Test files
-```
+## API Request Examples
+### Get all tools
+GET 'http://localhost:3000/api/v1/tools' \
+  --header 'Authorization: Bearer <token>'
 
-## Installation
+Response:
+  {
+    "Listing": "Tool Definitions",
+    "Count": 2,
+    "data": [
+        {
+            "name": "image_generator",
+            "description": "Generates images from text prompts",
+            "jsonSchema": "{\"type\":\"object\",\"properties\":{\"prompt\":{\"type\":\"string\"}}}",
+            "creator": "user123",
+            "createdAt": "2025-01-15T18:32:00.000Z",
+            "updatedAt": "2025-01-15T18:32:00.000Z"
+        },
+        {
+            "name": "text_summarizer",
+            "description": "Summarizes long text inputs",
+            "jsonSchema": "{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\"},\"maxLength\":{\"type\":\"integer\"}}}",
+            "creator": "user456",
+            "createdAt": "2025-01-20T10:15:00.000Z",
+            "updatedAt": "2025-01-20T10:15:00.000Z"
+        }
+    ]
+  }
 
-1. **Clone the repository**:
-   ```bash
-   git clone <repository-url>
-   cd AI-Tool-registration-service
-   ```
+### Create a new tool
+POST 'http://localhost:3000/api/v1/tools' \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer <token>' \
+  --body '{
+    "name": "code_formatter",
+    "description": "Formats code according to specified style guidelines",
+    "jsonSchema": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"string\"},\"language\":{\"type\":\"string\"}}}"
+  }'
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+Response:
+  {
+    "Listing": "Tool Definitions",
+    "data": {
+        "name": "code_formatter",
+        "description": "Formats code according to specified style guidelines",
+        "jsonSchema": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"string\"},\"language\":{\"type\":\"string\"}}}",
+        "creator": "user123",
+        "createdAt": "2025-02-01T14:22:00.000Z",
+        "updatedAt": "2025-02-01T14:22:00.000Z"
+    }
+  }
 
-3. **Set up environment variables**:
-   - Configure Firebase settings in `src/config/firebaseConfig.ts`
-   - Update Swagger configuration in `src/config/swagger.ts` if needed
+### Update a tool
+PUT 'http://localhost:3000/api/v1/tools/code_formatter' \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer <token>' \
+  --body '{
+    "description": "Formats code with improved style guidelines",
+    "jsonSchema": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"string\"},\"language\":{\"type\":\"string\"},\"style\":{\"type\":\"string\"}}}"
+  }'
 
-4. **Build the project** (optional, as scripts use ts-node):
-   ```bash
-   npx tsc
-   ```
+Response:
+  {
+    "update": {
+        "name": "code_formatter",
+        "description": "Formats code with improved style guidelines",
+        "jsonSchema": "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"string\"},\"language\":{\"type\":\"string\"},\"style\":{\"type\":\"string\"}}}",
+        "creator": "user123",
+        "createdAt": "2025-02-01T14:22:00.000Z",
+        "updatedAt": "2025-02-05T09:30:00.000Z"
+    }
+  }
 
-## Usage
+### Delete a tool
+DELETE 'http://localhost:3000/api/v1/tools/code_formatter' \
+  --header 'Authorization: Bearer <token>'
 
-### Development
+Response:
+  {
+    "deleted": {
+        "name": "code_formatter",
+        "creator": "user123",
+        "createdAt": "2025-02-01T14:22:00.000Z",
+        "deletedAt": "2025-02-05T09:35:00.000Z"
+    }
+  }
 
-Start the development server:
-```bash
-npm start
-```
+### Validation
+Fields are validated using Joi. Name must be 3-50 characters, description 10-200 characters, jsonSchema up to 5000 characters for creation. For updates, description 10-200, jsonSchema up to 1000. All fields are required for creation, description and jsonSchema for updates.
 
-The server will start on the default port (check `src/server.ts` for port configuration). API documentation will be available at `/api-docs`.
+## Documentation
+Swagger UI is available at: http://localhost:3000/api-docs
 
-### Testing
+## Author
+- Andrew Merrick
 
-Run the test suite:
-```bash
-npm test
-```
-
-Run tests in watch mode:
-```bash
-npm run test:watch
-```
-
-Generate test coverage:
-```bash
-npm run test:coverage
-```
-
-## API Endpoints
-
-### Tools
+### Creator
 - `GET /api/v1/tools` - Retrieve all registered tools
 - `POST /api/v1/tools` - Register a new tool
 - `GET /api/v1/tools/:id` - Get a specific tool by ID
@@ -118,14 +164,6 @@ npm run test:coverage
 - **Swagger**: Customize API documentation in `src/config/swagger.ts` and `src/config/swaggerOptions.ts`
 - **Server**: Adjust server settings in `src/server.ts` and `src/app.ts`
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## Testing
 
 The project includes comprehensive tests covering:
@@ -133,13 +171,3 @@ The project includes comprehensive tests covering:
 - Service logic
 - Middleware functionality
 - Error handling
-
-Ensure all tests pass before submitting changes.
-
-## License
-
-This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-For support, please open an issue in the repository or contact the development team.
